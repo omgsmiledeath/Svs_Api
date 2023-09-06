@@ -9,11 +9,11 @@ class Entry(db.Model):
     def __repr__(self):
         return '<Entry {}>'.format(self.date) 
    
-# class User(db.Model):
-#     id = db.Column(db.Integer,primary_key=True)
-#     name = db.Column(db.String(20))
-#     password = db.Column(db.string)
+class User(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    name = db.Column(db.String(20))
+    password = db.Column(db.String)
 
-#     def __repr__(self):
-#         return '<User {}>'.format(self.name)
+    def __repr__(self):
+        return '<User {}>'.format(self.name)
     
