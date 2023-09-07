@@ -10,13 +10,16 @@ app = Flask(__name__)  #Создаем само приложение
 def get_entries():
     try:
         cur = sqlite3.connect("./app/app.db").cursor()
-        res = cur.execute("SELECT * FROM ENTRY")
-        print(res.fetchall())
+
+        resSql = cur.execute("SELECT * FROM ENTRY")
+        res = resSql.fetchall()
+        print(res)
         response = make_response(
             jsonify(
-                "Res"),
+                res),
                 200,
                 )
+        response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     except Exception as ex:
         return ex.__str__()

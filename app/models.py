@@ -3,6 +3,7 @@ from app import db # импорт из папки app
 class Entry(db.Model): #сущность Записи
     id = db.Column(db.Integer,primary_key=True)  #поля таблицы
     date = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(10),nullable=False,server_default='CONFIRMED_STATUS')
     owner = db.Column(db.String(20),nullable=False)
     desc = db.Column(db.String(120),nullable=True)
 
