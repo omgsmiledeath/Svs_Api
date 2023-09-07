@@ -1,3 +1,7 @@
+###для миграций бд
+###
+###
+
 from flask import Flask
 from app.config import Config
 from flask_sqlalchemy import SQLAlchemy
