@@ -24,6 +24,17 @@ def get_entries():
     except Exception as ex:
         return ex.__str__()
 
+@app.route('api/v1/entries',methods=['GET'])
+def add_entries(entries):
+    try:
+        con = sqlite3.connect("./app/app.db")
+        cur = con.cursor()
+        cur.execute()
+        response = make_response(
+            jsonify(entries,201)
+        )
+    except Exception as ex:
+        return ex.__str__()
 if __name__== '__main__':
     app.run()
 
