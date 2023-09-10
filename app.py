@@ -2,7 +2,7 @@
 import sqlite3
 import json
 from flask_cors import CORS,cross_origin
-from flask import Flask, abort,jsonify,make_response,request  #Импорт методов из библиотеки Flask
+from flask import Flask,redirect,url_for,abort,jsonify,make_response,request  #Импорт методов из библиотеки Flask
 
 
 app = Flask(__name__)  #Создаем само приложение
@@ -63,7 +63,7 @@ def add_entries():
                 res),
                 201,
                 )
-        return response
+        return redirect(url_for('get_entries'),302)
     except Exception as ex:
         return ex.__str__()
     
