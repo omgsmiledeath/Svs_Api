@@ -4,7 +4,7 @@ import json
 from flask_cors import CORS,cross_origin
 from flask import Flask,redirect,url_for,abort,jsonify,make_response,request  #Импорт методов из библиотеки Flask
 
-
+dbpath = "./app/app.db"
 app = Flask(__name__)  #Создаем само приложение
 cors = CORS(app)
 app.config['CORS_HEADERS']='Content-Type'
@@ -67,6 +67,17 @@ def add_entries():
     except Exception as ex:
         return ex.__str__()
     
+@app.route('/api/v1/entries/<int:id>',methods=['PUT'])
+def update_entry(id):
+    json_req = request.get_json()
+    con = sqlite3.connect(dbpath)
+    cur = con.cursor()
+    print(json_req)
+    for el in json_req['entry']:
+        cur.execute("UPDATE entry SET date=?,status=?,owner=?,desc=? WHERE id=?",
+                      (el["date"],el["status"],el["owner"],el["desc"],id))
+    con.commit()
+    return jsonify()
 
 if __name__== '__main__':
     app.run(debug=True)
