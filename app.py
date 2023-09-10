@@ -9,6 +9,8 @@ app = Flask(__name__)  #Создаем само приложение
 cors = CORS(app)
 app.config['CORS_HEADERS']='Content-Type'
 
+
+#POST на получение токена , доделать!!!!!!!!!!!!!
 @app.route('/api/v1/login',methods=['POST'])
 @cross_origin()
 def login():
@@ -16,7 +18,7 @@ def login():
     print(token)
     return jsonify({"token":'1'})
 
-
+#GET на плучение всех записей
 @app.route('/api/v1/entries',methods=['GET']) #Ставим Endpoint для GET
 def get_entries():
     try:
@@ -34,7 +36,7 @@ def get_entries():
         return response
     except Exception as ex:
         return ex.__str__()
-
+#POST запрос с добавлеием новой записи
 @app.route('/api/v1/newentry',methods=['POST'])
 def add_entries():
     if not request.json:
@@ -66,7 +68,7 @@ def add_entries():
         return redirect(url_for('get_entries'),302)
     except Exception as ex:
         return ex.__str__()
-    
+#PUT запрос на обновление    
 @app.route('/api/v1/entries/<int:id>',methods=['PUT'])
 def update_entry(id):
     json_req = request.get_json()
