@@ -38,15 +38,19 @@ def add_entries():
         abort(400)
     try:
         temp = request.get_json()
-        print(temp['date'])
-        date = temp['date']
-        status = temp['status']
-        owner = temp['owner']
-        desc = temp['desc']
+        print(temp['entries'])
+        if not temp['entries']:
+            abort(400)
         con = sqlite3.connect("./app/app.db")
         cur = con.cursor()
-        con.execute("""INSERT INTO entry (date,status,owner,desc) 
-                    VALUES (?,?,?,?)""",(date,status,owner,desc))
+        for el in temp['entries'] :
+            date = el["date"]
+            status = el["status"]
+            owner = el["owner"]
+            desc = el["desc"]
+            print(date,status,owner,desc)
+            con.execute("""INSERT INTO entry (date,status,owner,desc) 
+                        VALUES (?,?,?,?)""",(date,status,owner,desc))
         con.commit()
         resSql = cur.execute("SELECT * FROM ENTRY")
         res = resSql.fetchall()
