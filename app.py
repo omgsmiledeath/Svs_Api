@@ -1,13 +1,16 @@
 #!flask/bin/python
 import sqlite3
 import json
+from flask_cors import CORS,cross_origin
 from flask import Flask, abort,jsonify,make_response,request  #Импорт методов из библиотеки Flask
 
 
 app = Flask(__name__)  #Создаем само приложение
-
+cors = CORS(app)
+app.config['CORS_HEADERS']='Content-Type'
 
 @app.route('/api/v1/login',methods=['POST'])
+@cross_origin()
 def login():
     token = request.get_json()
     print(token)
