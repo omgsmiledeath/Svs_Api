@@ -16,7 +16,10 @@ app.config['CORS_HEADERS']='Content-Type'
 def login():
     token = request.get_json()
     print(token)
-    return jsonify({"token":'1'})
+    cur = sqlite3.connect("./app/app.db").cursor()
+    resSql = cur.execute("SELECT * FROM ENTRY")
+    res = resSql.fetchall()
+    return jsonify(res),201
 
 #GET на плучение всех записей
 @app.route('/api/v1/entries',methods=['GET']) #Ставим Endpoint для GET
@@ -65,7 +68,7 @@ def add_entries():
                 res),
                 201,
                 )
-        return redirect(url_for('get_entries'),302)
+        return jsonify(res),201
     except Exception as ex:
         return ex.__str__()
 #PUT запрос на обновление    
