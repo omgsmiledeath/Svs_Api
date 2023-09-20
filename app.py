@@ -28,10 +28,14 @@ def get_posts():
 
         resSql = cur.execute("SELECT * FROM POST")
         res = resSql.fetchall()
-        print(res)
+        listToJson = []
+        for el in res:
+            listToJson.append({"id":el[0],"titul":el[1],"postText":el[2],"videoUrl":el[3],
+                               "createData":el[4],"updateData":el[5],"user":el[6]})
+        print(listToJson)
         response = make_response(
             jsonify(
-                res),
+                listToJson),
                 200,
                 )
         response.headers.add('Access-Control-Allow-Origin', '*')
