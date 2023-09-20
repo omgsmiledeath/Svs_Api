@@ -20,3 +20,14 @@ class User(db.Model): #Сущность Юзеры
     def __repr__(self):
         return '<User {}>'.format(self.name)
     
+class Post(db.Model): #Сущность постов
+    id = db.Column(db.Integer,primary_key=True)
+    titul = db.Column(db.String(20),nullable=False)
+    postText = db.Column(db.String(300),nullable=False)
+    videoUrl = db.Column(db.String(100))
+    createData = db.Column(db.DateTime , nullable= False)
+    updateData = db.Column(db.DateTime , nullable = False)
+    user = db.Column(db.String(20))
+
+    def __repr__(self):
+        return '<Post {}>'.format(self.titul)

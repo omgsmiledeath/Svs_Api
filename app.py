@@ -21,6 +21,24 @@ def login():
     res = resSql.fetchall()
     return jsonify(res),201
 
+@app.route('/api/v1/posts',methods=['GET']) #Ставим Endpoint для GET
+def get_posts():
+    try:
+        cur = sqlite3.connect("./app/app.db").cursor()
+
+        resSql = cur.execute("SELECT * FROM POST")
+        res = resSql.fetchall()
+        print(res)
+        response = make_response(
+            jsonify(
+                res),
+                200,
+                )
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    except Exception as ex:
+        return ex.__str__()
+    
 #GET на плучение всех записей
 @app.route('/api/v1/entries',methods=['GET']) #Ставим Endpoint для GET
 def get_entries():
@@ -46,29 +64,33 @@ def add_entries():
         abort(400)
     try:
         temp = request.get_json()
-        print(temp['entries'])
+        isExist = False
+        print('ENTRIES ________________')
+        print(temp['entries'])  
         if not temp['entries']:
             abort(400)
         con = sqlite3.connect("./app/app.db")
         cur = con.cursor()
         for el in temp['entries'] :
             date = el["date"]
-            status = el["status"]
-            owner = el["owner"]
-            desc = el["desc"]
-            print(date,status,owner,desc)
-            con.execute("""INSERT INTO entry (date,status,owner,desc) 
+            exist = cur.execute("""SELECT * FROM entry WHERE date = (?)
+                                """,(date,)).fetchone()
+            if (exist is None) or (len(exist)==0):
+                status = el["status"]
+                owner = el["owner"]
+                desc = el["desc"]
+                con.execute("""INSERT INTO entry (date,status,owner,desc) 
                         VALUES (?,?,?,?)""",(date,status,owner,desc))
-        con.commit()
+            else :
+                isExist==True
+        resCode = 201        
+        if isExist==False :
+            con.commit()
+        else:
+            resCode = 409    
         resSql = cur.execute("SELECT * FROM ENTRY")
         res = resSql.fetchall()
-        print(res)
-        response = make_response(
-            jsonify(
-                res),
-                201,
-                )
-        return jsonify(res),201
+        return jsonify(res),resCode
     except Exception as ex:
         return ex.__str__()
 #PUT запрос на обновление    
@@ -86,4 +108,5 @@ def update_entry(id):
 
 if __name__== '__main__':
     app.run(debug=True)
+
 
