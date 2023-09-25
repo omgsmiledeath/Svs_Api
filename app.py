@@ -3,7 +3,7 @@ import sqlite3
 import json
 from flask_cors import CORS,cross_origin
 from flask import Flask,redirect,url_for,abort,jsonify,make_response,request  #Импорт методов из библиотеки Flask
-
+from datetime import datetime
 dbpath = "./app/app.db"
 app = Flask(__name__)  #Создаем само приложение
 cors = CORS(app)
@@ -47,15 +47,22 @@ def get_posts():
 @app.route('/api/v1/entries',methods=['GET']) #Ставим Endpoint для GET
 def get_entries():
     try:
-        day = request.args.get('day')
+        day = request.args.get('day') 
+        if (day == None):
+            day = datetime.now().day
+            print(day)
         cur = sqlite3.connect("./app/app.db").cursor()
 
-        resSql = cur.execute("SELECT * FROM ENTRY")
+        resSql = cur.execute("SELECT id,date,status FROM ENTRY")
         res = resSql.fetchall()
-        print(res)
+        def checker(val:tuple):
+            id,date,status =val
+            return datetime.strptime(date,'%Y-%m-%dT%H:%M:%S.%fZ').day ==int(day)
+        result = [*filter(checker,res)]
+        print(result)
         response = make_response(
             jsonify(
-                res),
+                result),
                 200,
                 )
         response.headers.add('Access-Control-Allow-Origin', '*')
