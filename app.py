@@ -47,6 +47,7 @@ def get_posts():
 @app.route('/api/v1/entries',methods=['GET']) #Ставим Endpoint для GET
 def get_entries():
     try:
+        day = request.args.get('day')
         cur = sqlite3.connect("./app/app.db").cursor()
 
         resSql = cur.execute("SELECT * FROM ENTRY")
