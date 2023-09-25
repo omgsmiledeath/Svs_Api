@@ -47,17 +47,28 @@ def get_posts():
 @app.route('/api/v1/entries',methods=['GET']) #Ставим Endpoint для GET
 def get_entries():
     try:
-        day = request.args.get('day') 
-        if (day == None):
-            day = datetime.now().day
-            print(day)
+        def requestDateChecker():
+            
+            day = request.args.get('day') 
+            month = request.args.get('month')
+            year = request.args.get('year')
+            if (day == None):
+                day = datetime.now().day
+            if(month==None):
+                month = datetime.now().month
+            if(year==None):
+                year= datetime.now().year
+            t = (day,month,year)
+            print(t)
+            return t
+        day,month,year = requestDateChecker()
         cur = sqlite3.connect("./app/app.db").cursor()
-
         resSql = cur.execute("SELECT id,date,status FROM ENTRY")
         res = resSql.fetchall()
         def checker(val:tuple):
             id,date,status =val
-            return datetime.strptime(date,'%Y-%m-%dT%H:%M:%S.%fZ').day ==int(day)
+            dt = datetime.strptime(date,'%Y-%m-%dT%H:%M:%S.%fZ')
+            return ((dt.day ==int(day))==(dt.month==int(month))==(dt.year==int(year)))
         result = [*filter(checker,res)]
         print(result)
         response = make_response(
